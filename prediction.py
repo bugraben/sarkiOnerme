@@ -1,8 +1,5 @@
 from youtube_search import YoutubeSearch
-from gensim.models.keyedvectors import KeyedVectors
-
-# The 'limit' argument is vital, when not used, RAM goes boom
-model = KeyedVectors.load_word2vec_format('cc.tr.300.vec', binary=False, limit=2000000)
+import re
 
 def get_similar_words(word, top_n=20):
     similar_words = model.most_similar(word, topn=top_n)

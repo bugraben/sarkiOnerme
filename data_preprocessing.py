@@ -1,10 +1,9 @@
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 
-pd.set_option('display.max_columns', 30)
+# pd.set_option('display.max_columns', 30)
 
-df_ = pd.read_excel('./genius_turkce.xlsx')
-df = df_.copy()
+df = pd.read_excel('./genius_turkce.xlsx')
 
 df = df[['title', 'artist', 'lyrics']]
 df['song_artist'] = df['artist']
@@ -31,7 +30,9 @@ stopwords = ['fakat', 'lakin', 'ancak', 'acaba', 'ama', 'aslında', 'az', 'bazı
 
 cvector = CountVectorizer(stop_words=stopwords, max_df=0.05, min_df=10)
 
+print('CountVectorizer egitiliyor...')
 cvector_matrix = cvector.fit_transform(df['lyrics'].astype(str))
+print('CountVectorizer egitildi.')
 # a = 0
 # for i in cvector.get_feature_names_out():
 #     a += 1
@@ -52,7 +53,7 @@ final_df['song_artist'] = df['song_artist']
 final_df = pd.concat([df[['title', 'song_artist']], final_df], axis=1)
 final_df.info()
 final_df = final_df.reset_index()
-df = final_df.iloc[:40631, :]
+df = final_df.iloc[:-4, :]
 
 # final_df.to_hdf('./CountVectorMatrix.h5', 'key', 'a')
 # final_df.columns

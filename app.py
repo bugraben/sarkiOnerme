@@ -1,8 +1,21 @@
+from gensim.models.keyedvectors import KeyedVectors
 import streamlit as st
-from prediction import get_similar_words, find_songs_with_keyword, recommend_songs, prompt_to_keywords
+# from prediction import get_similar_words, find_songs_with_keyword, recommend_songs, prompt_to_keywords
+from time import time
 
+# start = time()
+print("Model yukleniyor...")
+# The 'limit' argument is vital, when not used, RAM goes boom
+model = KeyedVectors.load_word2vec_format('cc.tr.300.vec', binary=False, limit=100000)
+# print(f'Model yuklenme suresi: {time() - start}')
+
+# start = time()
+print("Veri on isleme...")
 exec(open('/home/bugra/PycharmProjects/sarkiOnerme/versiyon3/data_preprocessing.py').read())
-# streamlit run app2.py
+
+print('predict import...')
+exec(open('/home/bugra/PycharmProjects/sarkiOnerme/versiyon3/prediction.py').read())
+# print(f'Veri on isleme suresi: {time() - start}')
 
 # sayfa duzenlemeleri
 st.set_page_config(layout="centered", page_title="Şarkı öneri", page_icon="🎵")
