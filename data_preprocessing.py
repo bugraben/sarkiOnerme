@@ -1,67 +1,72 @@
 import pandas as pd
+import streamlit as st
 from sklearn.feature_extraction.text import CountVectorizer
 
 # pd.set_option('display.max_columns', 30)
+@st.cache_data
+def preprocess():
+    print("Veri on isleme...")
 
-df = pd.read_excel('./genius_turkce.xlsx')
+    df = pd.read_excel('./genius_turkce.xlsx')
 
-df = df[['title', 'artist', 'lyrics']]
-df['song_artist'] = df['artist']
-df = df.drop(columns='artist')
+    df = df.loc[:, ['title', 'artist', 'lyrics']]
+    df['song_artist'] = df['artist']
+    df = df.drop(columns='artist')
 
-bad_entries = df[(df['title'].str.contains('remix', case=False) == 1) |
-   (df['title'].str.contains('türkçe', case=False) == 1) |
-   (df['title'].str.contains('bass', case=False) == 1)].index
+    bad_entries = df[(df['title'].str.contains('remix', case=False) == 1) |
+       (df['title'].str.contains('türkçe', case=False) == 1) |
+       (df['title'].str.contains('mix', case=False) == 1) |
+       (df['title'].str.contains('bass', case=False) == 1)].index
 
-df = df.drop(index=bad_entries)
-df = df.reset_index()
+    df = df.drop(index=bad_entries)
+    df = df.reset_index()
 
-# df.info()
-# df.head()
+    # df.info()
+    # df.head()
 
-# df['title'].isnull().sum()
-df = df.dropna()
+    # df['title'].isnull().sum()
+    df = df.dropna()
 
-stopwords = ['fakat', 'lakin', 'ancak', 'acaba', 'ama', 'aslında', 'az', 'bazı', 'belki', 'biri', 'birkaç', 'birşey',
-             'biz', 'bu', 'çok', 'çünkü', 'da', 'daha', 'de', 'defa', 'diye', 'eğer', 'en', 'gibi', 'hem', 'hep',
-             'hepsi', 'her', 'hiç', 'için', 'ile', 'ise', 'kez', 'ki', 'kim', 'mı', 'mu', 'mü', 'nasıl', 'ne', 'neden',
-             'nerde', 'nerede', 'nereye', 'niçin', 'niye', 'o', 'sanki', 'şey', 'siz', 'şu', 'tüm', 've', 'veya', 'ya',
-             'yani']
+    stopwords = ['fakat', 'lakin', 'ancak', 'acaba', 'ama', 'aslında', 'az', 'bazı', 'belki', 'biri', 'birkaç', 'birşey',
+                 'biz', 'bu', 'çok', 'çünkü', 'da', 'daha', 'de', 'defa', 'diye', 'eğer', 'en', 'gibi', 'hem', 'hep',
+                 'hepsi', 'her', 'hiç', 'için', 'ile', 'ise', 'kez', 'ki', 'kim', 'mı', 'mu', 'mü', 'nasıl', 'ne', 'neden',
+                 'nerde', 'nerede', 'nereye', 'niçin', 'niye', 'o', 'sanki', 'şey', 'siz', 'şu', 'tüm', 've', 'veya', 'ya',
+                 'yani']
 
-cvector = CountVectorizer(stop_words=stopwords, max_df=0.05, min_df=10)
+    cvector = CountVectorizer(stop_words=stopwords, max_df=0.05, min_df=10)
 
-print('CountVectorizer egitiliyor...')
-cvector_matrix = cvector.fit_transform(df['lyrics'].astype(str))
-print('CountVectorizer egitildi.')
-# a = 0
-# for i in cvector.get_feature_names_out():
-#     a += 1
-#     print(i)
-
-
-# cvector_matrix.shape
-# cvector_matrix.toarray()
-# type(cvector_matrix)
-
-final_df = pd.DataFrame.sparse.from_spmatrix(cvector_matrix)
-final_df.columns = cvector.get_feature_names_out()
-# final_df.head()
-# final_df.shape
-# final_df.info()
-final_df['title'] = df['title']
-final_df['song_artist'] = df['song_artist']
-final_df = pd.concat([df[['title', 'song_artist']], final_df], axis=1)
-final_df.info()
-final_df = final_df.reset_index()
-df = final_df.iloc[:-4, :]
-
-# final_df.to_hdf('./CountVectorMatrix.h5', 'key', 'a')
-# final_df.columns
-# final_df = final_df.drop(columns=['00', '000'])
-# final_df.to_parquet('./CountVectorMatrix.parquet')
+    print('CountVectorizer egitiliyor...')
+    cvector_matrix = cvector.fit_transform(df['lyrics'].astype(str))
+    print('CountVectorizer egitildi.')
+    # a = 0
+    # for i in cvector.get_feature_names_out():
+    #     a += 1
+    #     print(i)
 
 
-#https://arrow.apache.org/docs/python/parquet.html
-# import pyarrow as pa
+    # cvector_matrix.shape
+    # cvector_matrix.toarray()
+    # type(cvector_matrix)
 
-# table = pa.Table.from_pandas(final_df)
+    final_df = pd.DataFrame.sparse.from_spmatrix(cvector_matrix)
+    final_df.columns = cvector.get_feature_names_out()
+    # final_df.head()
+    # final_df.shape
+    # final_df.info()
+    final_df.loc[:, 'title'] = df.loc[:, 'title']
+    final_df.loc[:, 'song_artist'] = df.loc[:, 'song_artist']
+    final_df = pd.concat([df[['title', 'song_artist']], final_df], axis=1)
+    final_df.info()
+    final_df = final_df.reset_index()
+    df = final_df.iloc[:-4, :]
+    return df
+    # final_df.to_hdf('./CountVectorMatrix.h5', 'key', 'a')
+    # final_df.columns
+    # final_df = final_df.drop(columns=['00', '000'])
+    # final_df.to_parquet('./CountVectorMatrix.parquet')
+
+
+    #https://arrow.apache.org/docs/python/parquet.html
+    # import pyarrow as pa
+
+    # table = pa.Table.from_pandas(final_df)
