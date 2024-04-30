@@ -5,7 +5,13 @@ import re
 
 @st.cache_resource
 def load_model(limit):
-    # The 'limit' argument is vital, when not used, RAM goes boom
+    '''
+    :param limit:
+
+    The 'limit' argument is vital, when not used, RAM goes boom
+    cc.tr.300.vec model has 2.000.000 entires.
+    '''
+
     print("Model yukleniyor...")
     model = KeyedVectors.load_word2vec_format('cc.tr.300.vec', binary=False, limit=limit)
     print('Model yuklendi.')
@@ -13,7 +19,10 @@ def load_model(limit):
 
 def get_similar_words(word, model, top_n=20):
     print('get_similar_words()')
-    similar_words = model.most_similar(word, topn=top_n)
+    try:
+        similar_words = model.most_similar(word, topn=top_n)
+    except KeyError:
+        return []
     return similar_words
 
 
@@ -42,36 +51,6 @@ def find_songs_with_keyword(keyword, df):
     return matching_songs
 
 
-def recommend_songs(keywords, model, df, top_n=5):
-    print('recommend_songs()')
-
-    recommended_songs = []
-
-    for keyword in keywords:
-        similar_words = get_similar_words(keyword, model)
-        similar_words.append([keyword, 1])
-
-
-        for word, similarity in similar_words:
-            relevant_songs = find_songs_with_keyword(word, df)
-            recommended_songs.extend(relevant_songs)
-
-    unique_recommended_songs = list(set(recommended_songs))
-    top_recommended_songs = unique_recommended_songs[:top_n]
-
-    songs_with_youtube_links = []
-    for song_info in top_recommended_songs:
-        artist, song_name = song_info.split('>>')
-        youtube_link = get_youtube_link(artist, song_name)
-        if youtube_link:
-            songs_with_youtube_links.append(song_info + ' - ' + youtube_link)
-
-    return songs_with_youtube_links
-
-# get_similar_words('hata')
-# find_songs_with_keyword('hatalar')
-# recommend_songs(['hata', 'hayat'])
-
 def songs_with_yt_links(songs):
     songs_with_youtube_links = []
     for song_info in songs:
@@ -82,18 +61,19 @@ def songs_with_yt_links(songs):
 
     return songs_with_youtube_links
 
-def recommend_songs_BUGRA(keywords, count_vector_matrix):
+
+def recommend_songs_BUGRA(keywords, count_vector_matrix, top_n=5):
     # keywords = ['yorulduk', 'kendim']
     # count_vector_matrix = final_df
-    print('recommend_songs_BUGRA')
+    print('recommend_songs_BUGRA()')
     cols = ['title', 'song_artist']
     cols.extend(keywords)
     temp_df = count_vector_matrix.loc[:, cols]
     temp_df.loc[:, 'score'] = temp_df.loc[:, keywords].T.astype(int).sum()
     temp_df.head()
-    top_five = temp_df[['title', 'song_artist', 'score']].sort_values('score', ascending=False).iloc[:5, :]
+    top_n = temp_df[['title', 'song_artist', 'score']].sort_values('score', ascending=False).iloc[:top_n, :]
     temp_df.head()
-    return top_five
+    return top_n
 
 
 def prompt_to_keywords(prompt: str, count_vector_matrix, model):
@@ -104,17 +84,40 @@ def prompt_to_keywords(prompt: str, count_vector_matrix, model):
         similar_words = get_similar_words(token, model)
         similar_words.append([token, 1])
         keywords.extend(similar_words)
-        st.write(keywords)
 
     keywords_filtered = []
     for keyword, similarity in keywords:
         if keyword in count_vector_matrix.columns:
             keywords_filtered.append(keyword)
+    st.write(keywords_filtered)
     return keywords_filtered
 
-# recommend_songs_BUGRA(['hata'], final_df)
 
-# a = prompt_to_keywords('ben cok yoruldum, duvarlar ustume ustume geliyor', final_df)
-# len(a)
+
+
+# def recommend_songs(keywords, model, df, top_n=5):
+#     print('recommend_songs()')
 #
-# recommend_songs_BUGRA(a, final_df)
+#     recommended_songs = []
+#
+#     for keyword in keywords:
+#         similar_words = get_similar_words(keyword, model)
+#         similar_words.append([keyword, 1])
+#
+#
+#         for word, similarity in similar_words:
+#             relevant_songs = find_songs_with_keyword(word, df)
+#             recommended_songs.extend(relevant_songs)
+#
+#     unique_recommended_songs = list(set(recommended_songs))
+#     top_recommended_songs = unique_recommended_songs[:top_n]
+#
+#     songs_with_youtube_links = []
+#     for song_info in top_recommended_songs:
+#         artist, song_name = song_info.split('>>')
+#         youtube_link = get_youtube_link(artist, song_name)
+#         if youtube_link:
+#             songs_with_youtube_links.append(song_info + ' - ' + youtube_link)
+#
+#     return songs_with_youtube_links
+

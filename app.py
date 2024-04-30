@@ -5,24 +5,21 @@ from time import time
 
 st.set_page_config(layout="centered", page_title="Şarkı öneri", page_icon="🎵")
 
-df = None
 
-if df is None:
 
-    # start = time()
-    # The 'limit' argument is vital, when not used, RAM goes boom
+start = time()
+# The 'limit' argument is vital, when not used, RAM goes boom
+model = load_model(limit=20000000)
+print(f'Model yuklenme suresi: {time() - start:.2f}')
 
-    model = load_model(limit=1000000)
-    # print(f'Model yuklenme suresi: {time() - start}')
+# start = time()
+df = preprocess()
+print('bitti')
+# exec(open('/home/bugra/PycharmProjects/sarkiOnerme/versiyon3/data_preprocessing.py').read())
 
-    # start = time()
-    df = preprocess()
-    print('bitti')
-    # exec(open('/home/bugra/PycharmProjects/sarkiOnerme/versiyon3/data_preprocessing.py').read())
-
-    # print('predict import...')
-    # exec(open('/home/bugra/PycharmProjects/sarkiOnerme/versiyon3/prediction.py').read())
-    # print(f'Veri on isleme suresi: {time() - start}')
+# print('predict import...')
+# exec(open('/home/bugra/PycharmProjects/sarkiOnerme/versiyon3/prediction.py').read())
+# print(f'Veri on isleme suresi: {time() - start}')
 
 # sayfa duzenlemeleri
 
@@ -43,8 +40,8 @@ input = main_tab.text_input("Metin giriniz:")
 
 if main_tab.button("Şarkı Öner"):
     keywords = prompt_to_keywords(input, df, model)
-    top_five = recommend_songs_BUGRA(keywords, df)
-    st.write(top_five.iloc[:, 0])
+    top_five = recommend_songs_BUGRA(keywords, df, top_n=40)
+    st.write(top_five)
     # col1, col2, col3, col4, col5 = recommendation_tab.columns(5, gap="small")
     # columns = [col1, col2, col3, col4, col5]
     # for i, song in enumerate(top_five.loc[:, 'title']):
