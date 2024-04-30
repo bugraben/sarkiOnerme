@@ -4,7 +4,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 # pd.set_option('display.max_columns', 30)
 @st.cache_data
-def preprocess():
+def preprocess(max_df, min_df):
     print("Veri on isleme...")
 
     df = pd.read_excel('./genius_turkce.xlsx')
@@ -25,11 +25,12 @@ def preprocess():
                       (df['title'].str.contains('translation', case=False)) |
                       (df['title'].str.contains('bass', case=False)) |
                       (df['title'].str.contains("Kur'an", case=False)) |
+                      (df['artist'].str.contains("Said Nursi", case=False)) |
                       (df['tag'] == 'rap') & (df['views'] < 3000000000)].index)
 
     df = df.drop(index=bad_entries)
     df = df.reset_index()
-    df = df.loc[:, ['title', 'artist', 'lyrics']]
+    df = df.loc[:, ['title', 'artist', 'lyrics', 'views']]
     df['song_artist'] = df['artist']
     df = df.drop(columns='artist')
 
@@ -39,13 +40,13 @@ def preprocess():
     # df['title'].isnull().sum()
     df = df.dropna()
 
-    stopwords = ['fakat', 'lakin', 'ancak', 'acaba', 'ama', 'aslında', 'az', 'bazı', 'belki', 'biri', 'birkaç', 'birşey',
-                 'biz', 'bu', 'çok', 'çünkü', 'da', 'daha', 'de', 'defa', 'diye', 'eğer', 'en', 'gibi', 'hem', 'hep',
-                 'hepsi', 'her', 'hiç', 'için', 'ile', 'ise', 'kez', 'ki', 'kim', 'mı', 'mu', 'mü', 'nasıl', 'ne', 'neden',
-                 'nerde', 'nerede', 'nereye', 'niçin', 'niye', 'o', 'sanki', 'şey', 'siz', 'şu', 'tüm', 've', 'veya', 'ya',
+    stopwords = ['fakat', 'lakin', 'ancak', 'acaba', 'ama', 'aslında', 'az', 'bazı', 'biri', 'birkaç', 'birşey',
+                 'bu', 'çok', 'çünkü', 'da', 'daha', 'de', 'defa', 'diye', 'eğer', 'en', 'gibi', 'hem', 'hep',
+                 'hepsi', 'her', 'için', 'ile', 'ise', 'kez', 'ki', 'mı', 'mu', 'mü', 'nasıl', 'ne',
+                 'nerde', 'niçin', 'niye', 'sanki', 'şey', 'siz', 'şu', 'tüm', 've', 'veya', 'ya',
                  'yani']
 
-    cvector = CountVectorizer(stop_words=stopwords, max_df=0.05, min_df=10)
+    cvector = CountVectorizer(stop_words=stopwords, max_df=max_df, min_df=min_df)
 
     print('CountVectorizer egitiliyor...')
     cvector_matrix = cvector.fit_transform(df['lyrics'].astype(str))
@@ -67,6 +68,7 @@ def preprocess():
     # final_df.info()
     final_df.loc[:, 'title'] = df.loc[:, 'title']
     final_df.loc[:, 'song_artist'] = df.loc[:, 'song_artist']
+    final_df.loc[:, 'views'] = df.loc[:, 'views']
     # final_df = pd.concat([df[['title', 'song_artist']], final_df], axis=1)
     final_df = final_df.reset_index()
     df = final_df.iloc[:-4, :]

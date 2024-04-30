@@ -13,7 +13,7 @@ model = load_model(limit=20000000)
 print(f'Model yuklenme suresi: {time() - start:.2f}')
 
 # start = time()
-df = preprocess()
+df = preprocess(max_df=0.01, min_df=10)
 print('bitti')
 # exec(open('/home/bugra/PycharmProjects/sarkiOnerme/versiyon3/data_preprocessing.py').read())
 
@@ -40,9 +40,19 @@ input = main_tab.text_input("Metin giriniz:")
 
 if main_tab.button("Şarkı Öner"):
     keywords = prompt_to_keywords(input, df, model)
-    top_five = recommend_songs_BUGRA(keywords, df, top_n=40)
-    st.write(top_five)
+    top_n = recommend_songs_BUGRA(keywords, df, top_n=20)
+    st.write(top_n)
     # col1, col2, col3, col4, col5 = recommendation_tab.columns(5, gap="small")
     # columns = [col1, col2, col3, col4, col5]
     # for i, song in enumerate(top_five.loc[:, 'title']):
     #     columns[i % 5].write(song)
+
+
+    '''
+    Ornek promptlar
+    
+    bugün okula giderken karşılaştım. çok güzel bir kız. onu gördüğümde heyecandan bayılacak gibi oluyorum
+    
+    yaptıklarım için çok pişmanım, keşke bir kez olsun dinleseydi beni
+    
+    '''

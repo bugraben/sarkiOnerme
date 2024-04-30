@@ -17,7 +17,7 @@ def load_model(limit):
     print('Model yuklendi.')
     return model
 
-def get_similar_words(word, model, top_n=20):
+def get_similar_words(word, model, top_n=10):
     print('get_similar_words()')
     try:
         similar_words = model.most_similar(word, topn=top_n)
@@ -66,13 +66,14 @@ def recommend_songs_BUGRA(keywords, count_vector_matrix, top_n=5):
     # keywords = ['yorulduk', 'kendim']
     # count_vector_matrix = final_df
     print('recommend_songs_BUGRA()')
-    cols = ['title', 'song_artist']
+    cols = ['title', 'song_artist', 'views']
     cols.extend(keywords)
     temp_df = count_vector_matrix.loc[:, cols]
     temp_df.loc[:, 'score'] = temp_df.loc[:, keywords].T.astype(int).sum()
-    temp_df.head()
-    top_n = temp_df[['title', 'song_artist', 'score']].sort_values('score', ascending=False).iloc[:top_n, :]
-    temp_df.head()
+    top_n = temp_df[['title', 'song_artist', 'score', 'views']]\
+                .sort_values('score', ascending=False)\
+                .iloc[:top_n, :]\
+                .sort_values('views', ascending=False)
     return top_n
 
 
