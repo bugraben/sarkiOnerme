@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 # pd.set_option('display.max_columns', 30)
 @st.cache_data
@@ -25,7 +25,8 @@ def preprocess(max_df, min_df):
                       (df['title'].str.contains('translation', case=False)) |
                       (df['title'].str.contains('bass', case=False)) |
                       (df['title'].str.contains("Kur'an", case=False)) |
-                      (df['artist'].str.contains("Said Nursi", case=False)) |
+                      (df['artist'].str.contains('Said Nursi', case=False)) |
+                      (df['artist'].str.contains('Genius Trke eviri', case=False)) |
                       (df['tag'] == 'rap') & (df['views'] < 3000000000)].index)
 
     df = df.drop(index=bad_entries)
@@ -46,11 +47,11 @@ def preprocess(max_df, min_df):
                  'nerde', 'niçin', 'niye', 'sanki', 'şey', 'siz', 'şu', 'tüm', 've', 'veya', 'ya',
                  'yani']
 
-    cvector = CountVectorizer(stop_words=stopwords, max_df=max_df, min_df=min_df)
+    cvector = TfidfVectorizer(stop_words=stopwords, max_df=max_df, min_df=min_df)
 
-    print('CountVectorizer egitiliyor...')
+    print('TfidfVectorizer egitiliyor...')
     cvector_matrix = cvector.fit_transform(df['lyrics'].astype(str))
-    print('CountVectorizer egitildi.')
+    print('TfidfVectorizer egitildi.')
     # a = 0
     # for i in cvector.get_feature_names_out():
     #     a += 1
