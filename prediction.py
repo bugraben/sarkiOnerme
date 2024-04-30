@@ -62,18 +62,24 @@ def songs_with_yt_links(songs):
     return songs_with_youtube_links
 
 
-def recommend_songs_BUGRA(keywords, count_vector_matrix, top_n=5):
+def recommend_songs_BUGRA(keywords, count_vector_matrix, sort_by='views', top_n=5):
     # keywords = ['yorulduk', 'kendim']
     # count_vector_matrix = final_df
     print('recommend_songs_BUGRA()')
     cols = ['title', 'song_artist', 'views']
     cols.extend(keywords)
     temp_df = count_vector_matrix.loc[:, cols]
-    temp_df.loc[:, 'score'] = temp_df.loc[:, keywords].T.astype(int).sum()
-    top_n = temp_df[['title', 'song_artist', 'score', 'views']]\
-                .sort_values('score', ascending=False)\
-                .iloc[:top_n, :]\
-                .sort_values('views', ascending=False)
+    temp_df.loc[:, 'score'] = temp_df.loc[:, keywords].T.astype(float).sum()
+    match sort_by:
+        case 'views':
+            top_n = temp_df[['title', 'song_artist', 'score', 'views']]\
+                        .sort_values('score', ascending=False)\
+                        .iloc[:top_n, :]\
+                        .sort_values('views', ascending=False)
+        case 'score':
+            top_n = temp_df[['title', 'song_artist', 'score', 'views']] \
+                        .sort_values('score', ascending=False) \
+                        .iloc[:top_n, :]
     return top_n
 
 

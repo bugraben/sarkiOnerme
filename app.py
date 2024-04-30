@@ -39,10 +39,12 @@ main_tab.write("Lütfen aşağıda belirtilen alana yazınız.")
 input = main_tab.text_input("Metin giriniz:")
 
 if main_tab.button("Şarkı Öner"):
+    col1, col2 = main_tab.columns(2, gap="small")
     keywords = prompt_to_keywords(input, df, model)
-    top_n = recommend_songs_BUGRA(keywords, df, top_n=20)
-    st.write(top_n)
-    # col1, col2, col3, col4, col5 = recommendation_tab.columns(5, gap="small")
+    top_n_views = recommend_songs_BUGRA(keywords, df, sort_by='views', top_n=40)
+    top_n_score = recommend_songs_BUGRA(keywords, df, sort_by='score', top_n=40)
+    col1.write(top_n_views)
+    col2.write(top_n_score)
     # columns = [col1, col2, col3, col4, col5]
     # for i, song in enumerate(top_five.loc[:, 'title']):
     #     columns[i % 5].write(song)
