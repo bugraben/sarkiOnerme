@@ -1,9 +1,9 @@
-import streamlit
+import streamlit as st
 from gensim.models.keyedvectors import KeyedVectors
 from youtube_search import YoutubeSearch
 import re
 
-@streamlit.cache_resource
+@st.cache_resource
 def load_model(limit):
     # The 'limit' argument is vital, when not used, RAM goes boom
     print("Model yukleniyor...")
@@ -104,6 +104,7 @@ def prompt_to_keywords(prompt: str, count_vector_matrix, model):
         similar_words = get_similar_words(token, model)
         similar_words.append([token, 1])
         keywords.extend(similar_words)
+        st.write(keywords)
 
     keywords_filtered = []
     for keyword, similarity in keywords:
