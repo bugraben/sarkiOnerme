@@ -17,7 +17,6 @@ def preprocess(max_df, min_df):
     #     .sort_values('views', ascending=True) \
     #     .head(200)
 
-
     bad_entries = (df[(df['title'].str.contains('remix', case=False)) |
                       (df['title'].str.contains('mix', case=False)) |
                       (df['title'].str.contains('türkçe', case=False)) |
