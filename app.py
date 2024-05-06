@@ -51,7 +51,7 @@ main_tab.write("Lütfen aşağıda belirtilen alana yazınız.")
 
 input = main_tab.text_input("Metin giriniz:")
 
-with open('/prompts_list.txt', mode='a') as file:
+with open('./prompts_list.txt', mode='a') as file:
     file.write(input + '\n\n')
 
 if main_tab.button("Şarkı Öner"):
