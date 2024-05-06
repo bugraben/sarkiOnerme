@@ -5,24 +5,9 @@ from time import time
 
 st.set_page_config(layout="centered", page_title="Şarkı öneri", page_icon="🎵")
 
-'''
-Ornek promptlar
-
-bugün okula giderken karşılaştım. çok güzel bir kız. onu gördüğümde heyecandan bayılacak gibi oluyorum
-
-yaptıklarım için çok pişmanım, keşke bir kez olsun dinleseydi beni
-
-Bazen durup düşünüyorum: gerek var mıydı bunca tantanaya. Neden oturup konuşamıyoruz biz seninle. Neden susup dinlemiyoruz biraz olsun. Birbirimizi çok kırdık. 
-
-İNANILMAZ GÜZEL BİR KIZLA TANIŞTIM. kantinde geldi yanıma, durup dururken geliverdi. tanışmak istiyormuş benimle. tabii dedim tanışalım. çok başka bir hali çok başka bir havası var. o anlattıkça ben daha derinlere düştüm. kayboldum.
-
-ben aşık oldum günlük. galiba bu kez onu buldum. doğru kızı buldum. hatunum.
-
-'''
-
 start = time()
 # The 'limit' argument is vital, when not used, RAM goes boom
-model = load_model(limit=100000)
+model = load_model(limit=90000)
 print(f'Model yuklenme suresi: {time() - start:.2f}')
 
 # start = time()
@@ -39,17 +24,31 @@ print('bitti')
 # baslik
 st.title("✮🎧🎸✮:rainbow[Şarkı öneri sistemi]✮📀🎵✮")
 
+'''
+Örnek Metinler:
+
+Bazen durup düşünüyorum: gerek var mıydı bunca tantanaya. Neden oturup konuşamıyoruz biz seninle. Neden susup dinlemiyoruz biraz olsun. Birbirimizi çok kırdık. 
+
+İNANILMAZ GÜZEL BİR KIZLA TANIŞTIM. kantinde geldi yanıma, durup dururken geliverdi. tanışmak istiyormuş benimle. tabii dedim tanışalım. çok başka bir hali çok başka bir havası var. o anlattıkça ben daha derinlere düştüm. kayboldum.
+
+5 sene önce güzel bir kızı ay ışığı altında deniz kenarında öptüm. O günü özlüyorum 
+
+Yıllardır yorgunum, ne dost kaldı ne yâr kaldı. Tek başıma savaştım çok şey başardım
+
+içimde bir şeyler ölüyor sanki. yalnızlık dört yandan kuşatıyor içimi. sanırım sonuna geliyoruz.
+
+'''
+
+
 # ikili sayfa duzeni
-main_tab, recommendation_tab = st.tabs(["Ana Sayfa", "Öneri Sistemi"])
+main_tab, credits_tab = st.tabs(["Ana Sayfa", "Künye"])
 
 # Ana Sayfa
-main_tab.header("Hoşgeldiniz!")
+main_tab.header("Hoşgeldin!")
 
-main_tab.write("Bize ruh halinizi anlatın size şarkı önerelim.")
+main_tab.write("Başından geçeni anlat. Sana şarkı önereyim.")
 
-main_tab.write("Lütfen aşağıda belirtilen alana yazınız.")
-
-input = main_tab.text_input("Metin giriniz:")
+input = main_tab.text_input("Uzun uzun anlat ama")
 
 with open('./prompts_list.txt', mode='a') as file:
     file.write(input + '\n\n')
