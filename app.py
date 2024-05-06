@@ -1,5 +1,5 @@
 import streamlit as st
-from prediction import get_similar_words, find_songs_with_keyword, recommend_songs_BUGRA, prompt_to_keywords, load_model
+from prediction import get_similar_words, find_songs_with_keyword, recommend_songs, prompt_to_keywords, load_model
 from data_preprocessing import preprocess
 from time import time
 
@@ -57,10 +57,12 @@ with open('./prompts_list.txt', mode='a') as file:
 if main_tab.button("Şarkı Öner"):
     col1, col2 = main_tab.columns(2, gap="small")
     keywords = prompt_to_keywords(input, df, model)
-    top_n_views = recommend_songs_BUGRA(keywords, df, sort_by='views', top_n=40)
-    top_n_score = recommend_songs_BUGRA(keywords, df, sort_by='score', top_n=40)
+    top_n_views = recommend_songs(keywords, df, sort_by='views', top_n=40)
+    top_n_score = recommend_songs(keywords, df, sort_by='score', top_n=40)
+    top_n_hybrid = recommend_songs(keywords, df, sort_by='score', top_n=40)
     col1.write(top_n_views)
     col2.write(top_n_score)
+    main_tab.write(top_n_hybrid)
     # columns = [col1, col2, col3, col4, col5]
     # for i, song in enumerate(top_five.loc[:, 'title']):
     #     columns[i % 5].write(song)

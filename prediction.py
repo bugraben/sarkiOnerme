@@ -2,6 +2,7 @@ import streamlit as st
 from gensim.models.keyedvectors import KeyedVectors
 from youtube_search import YoutubeSearch
 import re
+from sklearn.preprocessing import MinMaxScaler
 
 @st.cache_resource
 def load_model(limit):
@@ -62,10 +63,10 @@ def songs_with_yt_links(songs):
     return songs_with_youtube_links
 
 
-def recommend_songs_BUGRA(keywords, count_vector_matrix, sort_by='views', top_n=5):
+def recommend_songs(keywords, count_vector_matrix, sort_by='views', top_n=5):
     # keywords = ['yorulduk', 'kendim']
     # count_vector_matrix = final_df
-    print('recommend_songs_BUGRA()')
+    print('recommend_songs()')
     cols = ['title', 'song_artist', 'views']
     cols.extend(keywords)
     temp_df = count_vector_matrix.loc[:, cols]
@@ -79,6 +80,14 @@ def recommend_songs_BUGRA(keywords, count_vector_matrix, sort_by='views', top_n=
         case 'score':
             top_n = temp_df[['title', 'song_artist', 'score', 'views']] \
                         .sort_values('score', ascending=False) \
+                        .iloc[:top_n, :]
+        case 'hybrid':
+            scaler = MinMaxScaler(feature_range=(0.01, 2))
+            score_scaled = scaler.fit_transform(temp_df['score'])
+            views_scaled = scaler.fit_transform(temp_df['views'])
+            temp_df.loc[:, 'hybrid_score'] = views_scaled * score_scaled
+            top_n = temp_df[['title', 'song_artist', 'score', 'views', 'hybrid_score']] \
+                        .sort_values('hybrid_score', ascending=False) \
                         .iloc[:top_n, :]
     return top_n
 
@@ -97,7 +106,7 @@ def prompt_to_keywords(prompt: str, count_vector_matrix, model):
         if keyword in count_vector_matrix.columns:
             keywords_filtered.append(keyword)
             keywords_filtered = keywords_filtered
-    st.write(keywords_filtered)
+            st.write(keyword)
     return keywords_filtered
 
 
