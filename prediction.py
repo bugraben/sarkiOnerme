@@ -106,6 +106,7 @@ def prompt_to_keywords(prompt: str, count_vector_matrix, model):
         if keyword in count_vector_matrix.columns:
             keywords_filtered.append(keyword)
             keywords_filtered = keywords_filtered
+            st.write('Anahtar kelimeler:')
             st.write(keyword)
     return keywords_filtered
 

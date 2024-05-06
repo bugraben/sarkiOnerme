@@ -24,22 +24,6 @@ print('bitti')
 # baslik
 st.title("✮🎧🎸✮:rainbow[Şarkı öneri sistemi]✮📀🎵✮")
 
-'''
-Örnek Metinler:
-
-Bazen durup düşünüyorum: gerek var mıydı bunca tantanaya. Neden oturup konuşamıyoruz biz seninle. Neden susup dinlemiyoruz biraz olsun. Birbirimizi çok kırdık. 
-
-İNANILMAZ GÜZEL BİR KIZLA TANIŞTIM. kantinde geldi yanıma, durup dururken geliverdi. tanışmak istiyormuş benimle. tabii dedim tanışalım. çok başka bir hali çok başka bir havası var. o anlattıkça ben daha derinlere düştüm. kayboldum.
-
-5 sene önce güzel bir kızı ay ışığı altında deniz kenarında öptüm. O günü özlüyorum 
-
-Yıllardır yorgunum, ne dost kaldı ne yâr kaldı. Tek başıma savaştım çok şey başardım
-
-içimde bir şeyler ölüyor sanki. yalnızlık dört yandan kuşatıyor içimi. sanırım sonuna geliyoruz.
-
-'''
-
-
 # ikili sayfa duzeni
 main_tab, credits_tab = st.tabs(["Ana Sayfa", "Künye"])
 
@@ -66,3 +50,17 @@ if main_tab.button("Şarkı Öner"):
     # for i, song in enumerate(top_five.loc[:, 'title']):
     #     columns[i % 5].write(song)
 
+'''
+Örnek Metinler:
+
+Bazen durup düşünüyorum: gerek var mıydı bunca tantanaya. Neden oturup konuşamıyoruz biz seninle. Neden susup dinlemiyoruz biraz olsun. Birbirimizi çok kırdık. 
+
+İNANILMAZ GÜZEL BİR KIZLA TANIŞTIM. kantinde geldi yanıma, durup dururken geliverdi. tanışmak istiyormuş benimle. tabii dedim tanışalım. çok başka bir hali çok başka bir havası var. o anlattıkça ben daha derinlere düştüm. kayboldum.
+
+5 sene önce güzel bir kızı ay ışığı altında deniz kenarında öptüm. O günü özlüyorum 
+
+Yıllardır yorgunum, ne dost kaldı ne yâr kaldı. Tek başıma savaştım çok şey başardım
+
+içimde bir şeyler ölüyor sanki. yalnızlık dört yandan kuşatıyor içimi. sanırım sonuna geliyoruz.
+
+'''
