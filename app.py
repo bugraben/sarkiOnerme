@@ -57,4 +57,8 @@ if main_tab.button("Şarkı Öner"):
     
     yaptıklarım için çok pişmanım, keşke bir kez olsun dinleseydi beni
     
+    Bazen durup düşünüyorum: gerek var mıydı bunca tantanaya. Neden oturup konuşamıyoruz biz seninle. Neden susup dinlemiyoruz biraz olsun. Birbirimizi çok kırdık. 
+    
+    İNANILMAZ GÜZEL BİR KIZLA TANIŞTIM. kantinde geldi yanıma, durup dururken geliverdi. tanışmak istiyormuş benimle. tabii dedim tanışalım. çok başka bir hali çok başka bir havası var. o anlattıkça ben daha derinlere düştüm. kayboldum.
+    
     '''

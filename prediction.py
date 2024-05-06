@@ -96,6 +96,7 @@ def prompt_to_keywords(prompt: str, count_vector_matrix, model):
     for keyword, similarity in keywords:
         if keyword in count_vector_matrix.columns:
             keywords_filtered.append(keyword)
+            keywords_filtered = keywords_filtered
     st.write(keywords_filtered)
     return keywords_filtered
 

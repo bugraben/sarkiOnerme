@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-# pd.set_option('display.max_columns', 30)
+pd.set_option('display.max_rows', None)
 @st.cache_data
 def preprocess(max_df, min_df):
     print("Veri on isleme...")
@@ -16,7 +16,9 @@ def preprocess(max_df, min_df):
     # df[(df['tag'] == 'misc') & (df['views'] > 0)].loc[:, ['title', 'artist', 'tag', 'views', 'year']] \
     #     .sort_values('views', ascending=True) \
     #     .head(200)
+    # df['artist'].value_counts().loc['Se7en of 34']
 
+    fake_artists = df['artist'].value_counts().loc[(df['artist'].value_counts() < 5)].index
     bad_entries = (df[(df['title'].str.contains('remix', case=False)) |
                       (df['title'].str.contains('mix', case=False)) |
                       (df['title'].str.contains('türkçe', case=False)) |
@@ -26,7 +28,10 @@ def preprocess(max_df, min_df):
                       (df['title'].str.contains("Kur'an", case=False)) |
                       (df['artist'].str.contains('Said Nursi', case=False)) |
                       (df['artist'].str.contains('Genius Trke eviri', case=False)) |
+                      (df['artist'].str.contains('Genius Trkiye', case=False)) |
+                      (df['artist'].apply(lambda artist: artist in fake_artists)) |
                       (df['tag'] == 'rap') & (df['views'] < 3000000000)].index)
+
 
     df = df.drop(index=bad_entries)
     df = df.reset_index()
@@ -44,7 +49,10 @@ def preprocess(max_df, min_df):
                  'bu', 'çok', 'çünkü', 'da', 'daha', 'de', 'defa', 'diye', 'eğer', 'en', 'gibi', 'hem', 'hep',
                  'hepsi', 'her', 'için', 'ile', 'ise', 'kez', 'ki', 'mı', 'mu', 'mü', 'nasıl', 'ne',
                  'nerde', 'niçin', 'niye', 'sanki', 'şey', 'siz', 'şu', 'tüm', 've', 'veya', 'ya',
-                 'yani']
+                 'yani', 'ben', 'çokta', 'sürü', 'baska', 'başka', 'sizi']
+
+    # "oldukça", "cok", "hayli", "epey", "gerçekten", "oldukça", "cok", "hayli", "epey", "gerçekten"
+
 
     cvector = TfidfVectorizer(stop_words=stopwords, max_df=max_df, min_df=min_df)
 
