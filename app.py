@@ -42,7 +42,7 @@ if main_tab.button("Şarkı Öner"):
     keywords = prompt_to_keywords(input, df, model)
     top_n_views = recommend_songs(keywords, df, sort_by='views', top_n=40)
     top_n_score = recommend_songs(keywords, df, sort_by='score', top_n=40)
-    top_n_hybrid = recommend_songs(keywords, df, sort_by='score', top_n=40)
+    top_n_hybrid = recommend_songs(keywords, df, sort_by='hybrid', top_n=40)
     col1.write(top_n_views)
     col2.write(top_n_score)
     main_tab.write(top_n_hybrid)
