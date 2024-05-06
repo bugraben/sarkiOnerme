@@ -5,15 +5,28 @@ from time import time
 
 st.set_page_config(layout="centered", page_title="Şarkı öneri", page_icon="🎵")
 
+'''
+Ornek promptlar
 
+bugün okula giderken karşılaştım. çok güzel bir kız. onu gördüğümde heyecandan bayılacak gibi oluyorum
+
+yaptıklarım için çok pişmanım, keşke bir kez olsun dinleseydi beni
+
+Bazen durup düşünüyorum: gerek var mıydı bunca tantanaya. Neden oturup konuşamıyoruz biz seninle. Neden susup dinlemiyoruz biraz olsun. Birbirimizi çok kırdık. 
+
+İNANILMAZ GÜZEL BİR KIZLA TANIŞTIM. kantinde geldi yanıma, durup dururken geliverdi. tanışmak istiyormuş benimle. tabii dedim tanışalım. çok başka bir hali çok başka bir havası var. o anlattıkça ben daha derinlere düştüm. kayboldum.
+
+ben aşık oldum günlük. galiba bu kez onu buldum. doğru kızı buldum. hatunum.
+
+'''
 
 start = time()
 # The 'limit' argument is vital, when not used, RAM goes boom
-model = load_model(limit=20000000)
+model = load_model(limit=100000)
 print(f'Model yuklenme suresi: {time() - start:.2f}')
 
 # start = time()
-df = preprocess(max_df=0.01, min_df=10)
+df = preprocess(max_df=0.005, min_df=5)
 print('bitti')
 # exec(open('/home/bugra/PycharmProjects/sarkiOnerme/versiyon3/data_preprocessing.py').read())
 
@@ -49,16 +62,3 @@ if main_tab.button("Şarkı Öner"):
     # for i, song in enumerate(top_five.loc[:, 'title']):
     #     columns[i % 5].write(song)
 
-
-    '''
-    Ornek promptlar
-    
-    bugün okula giderken karşılaştım. çok güzel bir kız. onu gördüğümde heyecandan bayılacak gibi oluyorum
-    
-    yaptıklarım için çok pişmanım, keşke bir kez olsun dinleseydi beni
-    
-    Bazen durup düşünüyorum: gerek var mıydı bunca tantanaya. Neden oturup konuşamıyoruz biz seninle. Neden susup dinlemiyoruz biraz olsun. Birbirimizi çok kırdık. 
-    
-    İNANILMAZ GÜZEL BİR KIZLA TANIŞTIM. kantinde geldi yanıma, durup dururken geliverdi. tanışmak istiyormuş benimle. tabii dedim tanışalım. çok başka bir hali çok başka bir havası var. o anlattıkça ben daha derinlere düştüm. kayboldum.
-    
-    '''
