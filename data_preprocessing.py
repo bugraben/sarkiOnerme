@@ -81,7 +81,7 @@ def preprocess(max_df, min_df):
     final_df = final_df.reset_index()
     df = final_df.iloc[:-4, :]
     print('--df.info()--')
-    final_df.info()
+    df.info()
     print('----------')
     return df
     # final_df.to_hdf('./CountVectorMatrix.h5', 'key', 'a')
