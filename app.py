@@ -51,6 +51,9 @@ main_tab.write("Lütfen aşağıda belirtilen alana yazınız.")
 
 input = main_tab.text_input("Metin giriniz:")
 
+with open('/prompts_list.txt', mode='a') as file:
+    file.write(input)
+
 if main_tab.button("Şarkı Öner"):
     col1, col2 = main_tab.columns(2, gap="small")
     keywords = prompt_to_keywords(input, df, model)
