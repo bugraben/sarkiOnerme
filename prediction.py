@@ -82,14 +82,15 @@ def recommend_songs(keywords, count_vector_matrix, sort_by='views', top_n=5):
                         .sort_values('score', ascending=False) \
                         .iloc[:top_n, :]
         case 'hybrid':
-            top_n = temp_df[['title', 'song_artist', 'score', 'views']] \
-                        .sort_values('score', ascending=False) \
-                        .iloc[:top_n, :]
-            scaler = MinMaxScaler(feature_range=(0.01, 2))
+            scaler = MinMaxScaler(feature_range=(.01, 2.0)) #izlenmede yok ama scoreda outlierlar var. bunları temizlemek lazım
             score_scaled = scaler.fit_transform(temp_df['score'].values.reshape(-1, 1))
+            scaler = MinMaxScaler(feature_range=(.01, 1.70))
             views_scaled = scaler.fit_transform(temp_df['views'].values.reshape(-1, 1))
-            temp_df.loc[:, 'hybrid_score'] = views_scaled * score_scaled
-            top_n = top_n.sort_values('hybrid_score', ascending=False)
+            temp_df.loc[:, 'hybrid_score'] = (views_scaled * score_scaled).reshape(-1)
+            top_n = (temp_df[['title', 'song_artist', 'score', 'views', 'hybrid_score']] \
+                        .sort_values('score', ascending=False) \
+                        .iloc[:top_n, :] \
+                        .sort_values('hybrid_score', ascending=False))
     return top_n
 
 
@@ -103,12 +104,10 @@ def prompt_to_keywords(prompt: str, count_vector_matrix, model):
         keywords.extend(similar_words)
 
     keywords_filtered = []
-    st.write('Anahtar kelimeler:')
     for keyword, similarity in keywords:
         if keyword in count_vector_matrix.columns:
             keywords_filtered.append(keyword)
             keywords_filtered = keywords_filtered
-            st.write(keyword)
     return keywords_filtered
 
 

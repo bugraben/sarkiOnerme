@@ -30,7 +30,7 @@ def preprocess(max_df, min_df):
                       (df['artist'].str.contains('Genius Trke eviri', case=False)) |
                       (df['artist'].str.contains('Genius Trkiye', case=False)) |
                       (df['artist'].apply(lambda artist: artist in fake_artists)) |
-                      (df['tag'] == 'rap') & (df['views'] < 3000000000)].index)
+                      (df['tag'] == 'rap') & (df['artist'] != 'aner')].index)
 
 
     df = df.drop(index=bad_entries)

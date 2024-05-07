@@ -30,7 +30,7 @@ main_tab, credits_tab = st.tabs(["Ana Sayfa", "Künye"])
 # Ana Sayfa
 main_tab.header("Hoşgeldin!")
 
-main_tab.write("Başından geçeni anlat. Sana şarkı önereyim.")
+main_tab.write("Bana başından geçeni anlat. Sana şarkı önereyim.")
 
 input = main_tab.text_input("Uzun uzun anlat ama")
 
@@ -38,14 +38,19 @@ with open('./prompts_list.txt', mode='a') as file:
     file.write(input + '\n\n')
 
 if main_tab.button("Şarkı Öner"):
-    col1, col2 = main_tab.columns(2, gap="small")
+
+    tab_hybrid, tab_pop, tab_match, tab_keywords = main_tab.tabs(['Hibrit Sıralama',
+                                                                  'Popularite',
+                                                                  'Eslesme',
+                                                                  'Anahtar Kelimeler'])
     keywords = prompt_to_keywords(input, df, model)
+    tab_keywords.write(keywords)
     top_n_views = recommend_songs(keywords, df, sort_by='views', top_n=40)
     top_n_score = recommend_songs(keywords, df, sort_by='score', top_n=40)
     top_n_hybrid = recommend_songs(keywords, df, sort_by='hybrid', top_n=40)
-    col1.write(top_n_views)
-    col2.write(top_n_score)
-    main_tab.write(top_n_hybrid)
+    tab_pop.write(top_n_views)
+    tab_match.write(top_n_score)
+    tab_hybrid.write(top_n_hybrid)
     # columns = [col1, col2, col3, col4, col5]
     # for i, song in enumerate(top_five.loc[:, 'title']):
     #     columns[i % 5].write(song)
@@ -53,14 +58,14 @@ if main_tab.button("Şarkı Öner"):
 '''
 Örnek Metinler:
 
-Bazen durup düşünüyorum: gerek var mıydı bunca tantanaya. Neden oturup konuşamıyoruz biz seninle. Neden susup dinlemiyoruz biraz olsun. Birbirimizi çok kırdık. 
-
-İNANILMAZ GÜZEL BİR KIZLA TANIŞTIM. kantinde geldi yanıma, durup dururken geliverdi. tanışmak istiyormuş benimle. tabii dedim tanışalım. çok başka bir hali çok başka bir havası var. o anlattıkça ben daha derinlere düştüm. kayboldum.
+eski sinemada bir filme girsek seninle. geçmişimizden, çocukluktan konuşsak. özlediğimiz her şey, gözlerimize dolan her anı...
 
 5 sene önce güzel bir kızı ay ışığı altında deniz kenarında öptüm. O günü özlüyorum 
 
 Yıllardır yorgunum, ne dost kaldı ne yâr kaldı. Tek başıma savaştım çok şey başardım
 
 içimde bir şeyler ölüyor sanki. yalnızlık dört yandan kuşatıyor içimi. sanırım sonuna geliyoruz.
+
+İNANILMAZ GÜZEL BİR KIZLA TANIŞTIM. kantinde geldi yanıma, durup dururken geliverdi. tanışmak istiyormuş benimle. tabii dedim tanışalım. çok başka bir hali çok başka bir havası var. o anlattıkça ben daha derinlere düştüm. kayboldum.
 
 '''
