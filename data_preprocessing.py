@@ -26,6 +26,7 @@ def preprocess(max_df, min_df):
                       (df['title'].str.contains('translation', case=False)) |
                       (df['title'].str.contains('bass', case=False)) |
                       (df['title'].str.contains("Kur'an", case=False)) |
+                      (df['title'].str.contains("Tüketiciyim", case=False)) |
                       (df['artist'].str.contains('Said Nursi', case=False)) |
                       (df['artist'].str.contains('Genius Trke eviri', case=False)) |
                       (df['artist'].str.contains('Genius Trkiye', case=False)) |
