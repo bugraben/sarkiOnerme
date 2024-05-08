@@ -36,7 +36,7 @@ def preprocess(max_df, min_df):
 
     df = df.drop(index=bad_entries)
     df = df.reset_index()
-    df = df.loc[:, ['title', 'artist', 'lyrics', 'views']]
+    df = df.loc[:, ['title', 'artist', 'lyrics', 'views', 'year']]
     df['song_artist'] = df['artist']
     df = df.drop(columns='artist')
 
@@ -78,6 +78,7 @@ def preprocess(max_df, min_df):
     final_df.loc[:, 'title'] = df.loc[:, 'title']
     final_df.loc[:, 'song_artist'] = df.loc[:, 'song_artist']
     final_df.loc[:, 'views'] = df.loc[:, 'views']
+    final_df.loc[:, 'year'] = df.loc[:, 'year']
     # final_df = pd.concat([df[['title', 'song_artist']], final_df], axis=1)
     final_df = final_df.reset_index()
     df = final_df.iloc[:-4, :]
