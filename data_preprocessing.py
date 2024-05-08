@@ -49,7 +49,7 @@ def preprocess(max_df, min_df):
                  'bu', 'çok', 'çünkü', 'da', 'daha', 'de', 'defa', 'diye', 'eğer', 'en', 'gibi', 'hem', 'hep',
                  'hepsi', 'her', 'için', 'ile', 'ise', 'kez', 'ki', 'mı', 'mu', 'mü', 'nasıl', 'ne',
                  'nerde', 'niçin', 'niye', 'sanki', 'şey', 'siz', 'şu', 'tüm', 've', 'veya', 'ya',
-                 'yani', 'ben', 'çokta', 'sürü', 'baska', 'başka', 'sizi']
+                 'yani', 'ben', 'çokta', 'sürü', 'baska', 'başka', 'sizi', 'birçok']
 
     # "oldukça", "cok", "hayli", "epey", "gerçekten", "oldukça", "cok", "hayli", "epey", "gerçekten"
 
