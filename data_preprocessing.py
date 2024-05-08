@@ -1,8 +1,8 @@
 import pandas as pd
 import streamlit as st
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
-# pd.set_option('display.max_columns', 30)
+pd.set_option('display.max_rows', None)
 @st.cache_data
 def preprocess(max_df, min_df):
     print("Veri on isleme...")
@@ -16,8 +16,9 @@ def preprocess(max_df, min_df):
     # df[(df['tag'] == 'misc') & (df['views'] > 0)].loc[:, ['title', 'artist', 'tag', 'views', 'year']] \
     #     .sort_values('views', ascending=True) \
     #     .head(200)
+    # df['artist'].value_counts().loc['Se7en of 34']
 
-
+    fake_artists = df['artist'].value_counts().loc[(df['artist'].value_counts() < 5)].index
     bad_entries = (df[(df['title'].str.contains('remix', case=False)) |
                       (df['title'].str.contains('mix', case=False)) |
                       (df['title'].str.contains('türkçe', case=False)) |
@@ -25,12 +26,17 @@ def preprocess(max_df, min_df):
                       (df['title'].str.contains('translation', case=False)) |
                       (df['title'].str.contains('bass', case=False)) |
                       (df['title'].str.contains("Kur'an", case=False)) |
-                      (df['artist'].str.contains("Said Nursi", case=False)) |
-                      (df['tag'] == 'rap') & (df['views'] < 3000000000)].index)
+                      (df['title'].str.contains("Tüketiciyim", case=False)) |
+                      (df['artist'].str.contains('Said Nursi', case=False)) |
+                      (df['artist'].str.contains('Genius Trke eviri', case=False)) |
+                      (df['artist'].str.contains('Genius Trkiye', case=False)) |
+                      (df['artist'].apply(lambda artist: artist in fake_artists)) |
+                      (df['tag'] == 'rap') & (df['artist'] != 'aner')].index)
+
 
     df = df.drop(index=bad_entries)
     df = df.reset_index()
-    df = df.loc[:, ['title', 'artist', 'lyrics', 'views']]
+    df = df.loc[:, ['title', 'artist', 'lyrics', 'views', 'year']]
     df['song_artist'] = df['artist']
     df = df.drop(columns='artist')
 
@@ -44,13 +50,16 @@ def preprocess(max_df, min_df):
                  'bu', 'çok', 'çünkü', 'da', 'daha', 'de', 'defa', 'diye', 'eğer', 'en', 'gibi', 'hem', 'hep',
                  'hepsi', 'her', 'için', 'ile', 'ise', 'kez', 'ki', 'mı', 'mu', 'mü', 'nasıl', 'ne',
                  'nerde', 'niçin', 'niye', 'sanki', 'şey', 'siz', 'şu', 'tüm', 've', 'veya', 'ya',
-                 'yani']
+                 'yani', 'ben', 'çokta', 'sürü', 'baska', 'başka', 'sizi']
 
-    cvector = CountVectorizer(stop_words=stopwords, max_df=max_df, min_df=min_df)
+    # "oldukça", "cok", "hayli", "epey", "gerçekten", "oldukça", "cok", "hayli", "epey", "gerçekten"
 
-    print('CountVectorizer egitiliyor...')
+
+    cvector = TfidfVectorizer(stop_words=stopwords, max_df=max_df, min_df=min_df)
+
+    print('TfidfVectorizer egitiliyor...')
     cvector_matrix = cvector.fit_transform(df['lyrics'].astype(str))
-    print('CountVectorizer egitildi.')
+    print('TfidfVectorizer egitildi.')
     # a = 0
     # for i in cvector.get_feature_names_out():
     #     a += 1
@@ -69,11 +78,12 @@ def preprocess(max_df, min_df):
     final_df.loc[:, 'title'] = df.loc[:, 'title']
     final_df.loc[:, 'song_artist'] = df.loc[:, 'song_artist']
     final_df.loc[:, 'views'] = df.loc[:, 'views']
+    final_df.loc[:, 'year'] = df.loc[:, 'year']
     # final_df = pd.concat([df[['title', 'song_artist']], final_df], axis=1)
     final_df = final_df.reset_index()
     df = final_df.iloc[:-4, :]
     print('--df.info()--')
-    final_df.info()
+    df.info()
     print('----------')
     return df
     # final_df.to_hdf('./CountVectorMatrix.h5', 'key', 'a')
