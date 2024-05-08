@@ -6,20 +6,16 @@ from time import time
 st.set_page_config(layout="centered", page_title="Şarkı öneri", page_icon="🎵")
 
 start = time()
-# The 'limit' argument is vital, when not used, RAM goes boom
 model = load_model(limit=90000)
-print(f'Model yuklenme suresi: {time() - start:.2f}')
+try:
+    print(f'Model yuklenme suresi: {time() - start:.2f}')
+except OSError:
+    print('OSError')
 
-# start = time()
 df = preprocess(max_df=0.005, min_df=5)
 print('bitti')
 # exec(open('/home/bugra/PycharmProjects/sarkiOnerme/versiyon3/data_preprocessing.py').read())
 
-# print('predict import...')
-# exec(open('/home/bugra/PycharmProjects/sarkiOnerme/versiyon3/prediction.py').read())
-# print(f'Veri on isleme suresi: {time() - start}')
-
-# sayfa duzenlemeleri
 
 # baslik
 st.title("✮🎧🎸✮:rainbow[Şarkı öneri sistemi]✮📀🎵✮")
