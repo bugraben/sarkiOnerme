@@ -7,7 +7,7 @@ Hala geliştirme aşamasında. Kaynak kısıtlılığı sebebiyle yalnızca Tür
 
 Önemli: Henüz SSL sertifikasını ayarlamadığımdan erişim problemi yaşıyorsanız tarayıcınızın adres çubuğundan "https://" ifadesini "http://" ile değiştirebilirsiniz.
 
-# Prompt Based Song Recommendation System Utilizes TFIDF and FastText Word Embeddings.
+# Prompt Based Song Recommendation System Using TFIDF and FastText Word Embeddings.
 _"Tell me what happened to you, and I'll recommend you a song."_
 
 I've deployed the app on an EC2 t3.micro instance. You can try it at http://sarki.bugraisikdemir.com.tr.
